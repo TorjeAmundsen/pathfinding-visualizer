@@ -110,6 +110,10 @@ type Path = {
   path: { row: number; col: number }[];
 };
 
+// By far the hardest part of the project to wrap my head around
+//
+// It works though lol
+
 class PriorityQueue<T> {
   private heap: T[] = [];
 

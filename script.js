@@ -89,6 +89,9 @@ function setEndNode(col, row, firstRun = false) {
 const delay = (delayInms) => {
     return new Promise((resolve) => setTimeout(resolve, delayInms));
 };
+// By far the hardest part of the project to wrap my head around
+//
+// It works though lol
 class PriorityQueue {
     constructor(comparator) {
         this.comparator = comparator;
