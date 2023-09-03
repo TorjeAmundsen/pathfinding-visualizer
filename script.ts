@@ -182,9 +182,9 @@ class PriorityQueue<T> {
 async function dijkstra(): Promise<Path> {
   const directions = [
     [0, 1],
+    [-1, 0],
     [0, -1],
     [1, 0],
-    [-1, 0],
   ];
   const queue = new PriorityQueue<QueuedItem>((a, b) => a.distance - b.distance);
 

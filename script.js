@@ -158,9 +158,9 @@ function dijkstra() {
     return __awaiter(this, void 0, void 0, function* () {
         const directions = [
             [0, 1],
+            [-1, 0],
             [0, -1],
             [1, 0],
-            [-1, 0],
         ];
         const queue = new PriorityQueue((a, b) => a.distance - b.distance);
         queue.enqueue({ row: startNode.row, col: startNode.col, distance: 0 });
