@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  background-color: hsl(218, 15%, 15%);
+}
+
+#app {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  outline: 2px solid hsl(204, 53%, 52%);
+}
+
+.buttons-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    transition: 100ms;
+    color: white;
+    background-color: hsla(207, 57%, 53%, 0.87);
+    border: none;
+    border-radius: 7px;
+    height: 2rem;
+    width: 15rem;
+    &:hover {
+      background-color: hsla(194, 58%, 54%, 0.87);
+    }
+  }
+}
+
+.grid-container {
+  display: grid;
+  width: 95vw;
+  grid-template-columns: repeat(50, calc(95vw / 50));
+  grid-template-rows: repeat(24, calc(95vw / 50));
+  background-color: hsl(218, 15%, 25%);
+}
+
+.node {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: bold;
+  user-select: none;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black, -1px 1px 2px black;
+  background-color: hsl(218, 15%, 25%);
+  width: 1fr;
+  height: 1fr;
+  outline: 2px solid hsla(204, 40%, 35%);
+  font-size: 0.7vw;
+  transition: 200ms;
+  padding-top: 0.4vw;
+  &:hover {
+    box-shadow: inset 0 0 0.65vw 0.25vw hsl(204, 100%, 71%);
+    transition: 0ms;
+  }
+}
+
+.start-node {
+  background-color: hsl(130, 82%, 44%);
+  &::before {
+    line-height: 1fr;
+    padding-right: 2px;
+    content: "Start";
+  }
+}
+
+.end-node {
+  background-color: hsl(281, 100%, 56%);
+  &::before {
+    line-height: 1fr;
+    padding-right: 1px;
+    content: "End";
+  }
+}
+
+.path {
+  transition: 100ms !important;
+  background-color: yellow !important;
+}
+
+.searching {
+  animation: searchAnimation 1500ms;
+  animation-iteration-count: 1;
+  background-color: hsla(194, 88%, 61%, 0.87);
+}
+
+@keyframes searchAnimation {
+  0% {
+    background-color: hsla(138, 100%, 50%, 0);
+  }
+  25% {
+    background-color: hsl(147, 100%, 50%);
+  }
+  50% {
+    background-color: hsl(167, 100%, 50%);
+  }
+  100% {
+    background-color: hsla(194, 88%, 61%, 0.87);
+  }
+}
