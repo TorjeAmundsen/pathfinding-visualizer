@@ -3,6 +3,8 @@ const app = document.getElementById("app");
 const totalRows = 24;
 const totalCols = 50;
 let nodes = [];
+document.body.addEventListener("mouseup", handleMouseUp);
+document.body.addEventListener("mouseleave", handleMouseUp);
 function getDOMAt(col, row) {
     return document.getElementById(`${col}-${row}`);
 }
@@ -35,7 +37,8 @@ function handleMouseDown(col, row) {
         movingEnd = true;
     }
 }
-function handleMouseEnter(col, row) {
+function handleMouseEnter(e, col, row) {
+    console.log(e);
     if (drawingWall && !movingStart && !movingEnd)
         createWall(row, col);
     else if (movingStart)
@@ -79,8 +82,8 @@ function createGrid() {
             node.addEventListener("mousedown", () => {
                 handleMouseDown(col, row);
             });
-            node.addEventListener("mouseenter", () => {
-                handleMouseEnter(col, row);
+            node.addEventListener("mouseenter", (e) => {
+                handleMouseEnter(e, col, row);
             });
             wrapper.appendChild(node);
         }
@@ -88,7 +91,6 @@ function createGrid() {
     }
     app.appendChild(wrapper);
 }
-document.body.addEventListener("mouseup", handleMouseUp);
 function isSlotTaken(col, row) {
     return ((col === startNode.col && row === startNode.row) || (col === endNode.col && row === endNode.row));
 }

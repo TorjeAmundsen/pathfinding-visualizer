@@ -29,6 +29,9 @@ const totalCols = 50;
 
 let nodes: TNode[][] = [];
 
+document.body.addEventListener("mouseup", handleMouseUp);
+document.body.addEventListener("mouseleave", handleMouseUp);
+
 function getDOMAt(col: number, row: number): HTMLElement {
   return document.getElementById(`${col}-${row}`);
 }
@@ -62,7 +65,8 @@ function handleMouseDown(col: number, row: number) {
     movingEnd = true;
   }
 }
-function handleMouseEnter(col: number, row: number) {
+function handleMouseEnter(e: Event, col: number, row: number) {
+  console.log(e);
   if (drawingWall && !movingStart && !movingEnd) createWall(row, col);
   else if (movingStart) setStartNode(col, row);
   else if (movingEnd) setEndNode(col, row);
@@ -106,8 +110,8 @@ function createGrid() {
       node.addEventListener("mousedown", () => {
         handleMouseDown(col, row);
       });
-      node.addEventListener("mouseenter", () => {
-        handleMouseEnter(col, row);
+      node.addEventListener("mouseenter", (e) => {
+        handleMouseEnter(e, col, row);
       });
       wrapper.appendChild(node);
     }
@@ -115,8 +119,6 @@ function createGrid() {
   }
   app.appendChild(wrapper);
 }
-
-document.body.addEventListener("mouseup", handleMouseUp);
 
 function isSlotTaken(col: number, row: number): boolean {
   return (
