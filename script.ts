@@ -125,14 +125,14 @@ function isSlotTaken(col: number, row: number): boolean {
 }
 
 function setStartNode(col: number, row: number, firstRun: boolean = false) {
-  if (isSlotTaken(col, row) && !firstRun) return;
+  if ((isSlotTaken(col, row) && !firstRun) || nodes[row][col].visited) return;
   getDOMAt(startNode.col, startNode.row).classList.remove("start-node");
   getDOMAt(col, row).classList.add("start-node");
   startNode = { col: col, row: row };
 }
 
 function setEndNode(col: number, row: number, firstRun: boolean = false) {
-  if (isSlotTaken(col, row) && !firstRun) return;
+  if ((isSlotTaken(col, row) && !firstRun) || nodes[row][col].visited) return;
   getDOMAt(endNode.col, endNode.row).classList.remove("end-node");
   getDOMAt(col, row).classList.add("end-node");
   endNode = { col: col, row: row };
