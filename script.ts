@@ -73,14 +73,6 @@ function clearPath() {
   setEndNode(endNode.col, endNode.row, true);
 }
 
-/* function handleClick(e: MouseEvent, col: number, row: number) {
-  if (e.shiftKey === true) {
-    setEndNode(col, row);
-  } else {
-    setStartNode(col, row);
-  }
-} */
-
 function createWall(row: number, col: number) {
   nodes[row][col].distance = Infinity;
   nodes[row][col].visited = true;
