@@ -34,6 +34,12 @@ body {
 .buttons-container button:hover {
   background-color: hsla(194, 58%, 54%, 0.87);
 }
+.buttons-container button:hover:disabled {
+  background-color: hsl(192, 4%, 24%);
+}
+.buttons-container button:disabled {
+  background-color: hsl(192, 4%, 24%);
+}
 
 .grid-container {
   display: grid;

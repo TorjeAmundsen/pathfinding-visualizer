@@ -54,6 +54,7 @@ function clearPath() {
     createGrid();
     setStartNode(startNode.col, startNode.row, true);
     setEndNode(endNode.col, endNode.row, true);
+    document.getElementById("run-button").disabled = false;
 }
 function createWall(row, col) {
     nodes[row][col].distance = Infinity;
@@ -176,6 +177,8 @@ class PriorityQueue {
     }
 }
 async function dijkstra(start, end) {
+    document.getElementById("reset-button").disabled = true;
+    document.getElementById("run-button").disabled = true;
     nodes[start.row][start.col].isStart = true;
     nodes[start.row][start.col].distance = 0;
     nodes[end.row][end.col].isEnd = true;
@@ -221,6 +224,7 @@ async function dijkstra(start, end) {
             iteration = 0;
         }
     }
+    document.getElementById("reset-button").disabled = false;
     return { distance: -1, path: [null] };
 }
 function backtrackPath() {
@@ -249,6 +253,7 @@ async function visualizePath(path) {
     }
     getDOMAt(endNode.col, endNode.row).classList.add("path");
     getDOMAt(endNode.col, endNode.row).classList.remove("searching");
+    document.getElementById("reset-button").disabled = false;
 }
 createGrid();
 setStartNode(startNode.col, startNode.row, true);

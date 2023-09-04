@@ -79,6 +79,7 @@ function clearPath() {
   createGrid();
   setStartNode(startNode.col, startNode.row, true);
   setEndNode(endNode.col, endNode.row, true);
+  (document.getElementById("run-button") as HTMLButtonElement).disabled = false;
 }
 
 function createWall(row: number, col: number) {
@@ -212,6 +213,8 @@ class PriorityQueue<T> {
 }
 
 async function dijkstra(start: TStartEndNode, end: TStartEndNode): Promise<Path> {
+  (document.getElementById("reset-button") as HTMLButtonElement).disabled = true;
+  (document.getElementById("run-button") as HTMLButtonElement).disabled = true;
   nodes[start.row][start.col].isStart = true;
   nodes[start.row][start.col].distance = 0;
   nodes[end.row][end.col].isEnd = true;
@@ -259,6 +262,7 @@ async function dijkstra(start: TStartEndNode, end: TStartEndNode): Promise<Path>
       iteration = 0;
     }
   }
+  (document.getElementById("reset-button") as HTMLButtonElement).disabled = false;
   return { distance: -1, path: [null] };
 }
 
@@ -288,6 +292,7 @@ async function visualizePath(path: Path) {
   }
   getDOMAt(endNode.col, endNode.row).classList.add("path");
   getDOMAt(endNode.col, endNode.row).classList.remove("searching");
+  (document.getElementById("reset-button") as HTMLButtonElement).disabled = false;
 }
 
 createGrid();

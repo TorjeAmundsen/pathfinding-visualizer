@@ -31,6 +31,12 @@ body {
     width: 15rem;
     &:hover {
       background-color: hsla(194, 58%, 54%, 0.87);
+      &:disabled {
+        background-color: hsl(192, 4%, 24%);
+      }
+    }
+    &:disabled {
+      background-color: hsl(192, 4%, 24%);
     }
   }
 }
