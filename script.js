@@ -9,8 +9,6 @@ let movingEnd = false;
 let searching = false;
 let boardFilled = false;
 let nodes = [];
-document.body.addEventListener("mouseup", handleMouseUp);
-document.body.addEventListener("mouseleave", handleMouseUp);
 let startNode = {
     col: 2,
     row: 2,
@@ -208,7 +206,6 @@ async function dijkstra(start, end, animationDelay) {
     }
     document.getElementById("reset-button").disabled = false;
     searching = false;
-    return { distance: -1, path: [null] };
 }
 function backtrackPath() {
     const path = [];
@@ -247,4 +244,6 @@ window.addEventListener("DOMContentLoaded", () => {
     createGrid();
     setStartNode(startNode.col, startNode.row, true);
     setEndNode(endNode.col, endNode.row, true);
+    document.body.addEventListener("mouseup", handleMouseUp);
+    document.body.addEventListener("mouseleave", handleMouseUp);
 });

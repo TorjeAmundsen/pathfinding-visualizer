@@ -32,9 +32,6 @@ let boardFilled = false;
 
 let nodes: TNode[][] = [];
 
-document.body.addEventListener("mouseup", handleMouseUp);
-document.body.addEventListener("mouseleave", handleMouseUp);
-
 let startNode: TStartEndNode = {
   col: 2,
   row: 2,
@@ -190,7 +187,7 @@ async function dijkstra(
   start: TStartEndNode,
   end: TStartEndNode,
   animationDelay: number
-): Promise<Path> {
+): Promise<void> {
   if (!boardFilled) searching = true;
   (document.getElementById("reset-button") as HTMLButtonElement).disabled = true;
   (document.getElementById("run-button") as HTMLButtonElement).disabled = true;
@@ -244,7 +241,6 @@ async function dijkstra(
   }
   (document.getElementById("reset-button") as HTMLButtonElement).disabled = false;
   searching = false;
-  return { distance: -1, path: [null] };
 }
 
 function backtrackPath(): { row: number; col: number }[] {
@@ -284,4 +280,6 @@ window.addEventListener("DOMContentLoaded", () => {
   createGrid();
   setStartNode(startNode.col, startNode.row, true);
   setEndNode(endNode.col, endNode.row, true);
+  document.body.addEventListener("mouseup", handleMouseUp);
+  document.body.addEventListener("mouseleave", handleMouseUp);
 });
