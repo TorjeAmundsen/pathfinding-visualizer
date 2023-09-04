@@ -280,6 +280,8 @@ async function visualizePath(path: Path, animationDelay: number) {
   root.style.setProperty("--path-transition", "0ms");
 }
 
-createGrid();
-setStartNode(startNode.col, startNode.row, true);
-setEndNode(endNode.col, endNode.row, true);
+window.addEventListener("DOMContentLoaded", () => {
+  createGrid();
+  setStartNode(startNode.col, startNode.row, true);
+  setEndNode(endNode.col, endNode.row, true);
+});
