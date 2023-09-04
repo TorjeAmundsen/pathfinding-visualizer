@@ -28,17 +28,25 @@ function handleMouseDown(col, row) {
         if (!isSlotTaken(col, row)) {
             drawingWall = true;
             createWall(row, col);
-            console.log("Created wall at", row, col);
         }
         else if (col === startNode.col && row === startNode.row) {
             movingStart = true;
-            console.log("Moving start:", movingStart);
         }
         else if (col === endNode.col && row === endNode.row) {
             movingEnd = true;
-            console.log("Moving end:", movingEnd);
         }
     }
+}
+function clearKeepWalls() {
+    const temp_nodes = [...nodes];
+    for (let row = 0; row < totalRows; row++) {
+        for (let col = 0; col < totalCols; col++) {
+            temp_nodes[row][col].distance = Infinity;
+            temp_nodes[row][col].visited = false;
+            temp_nodes[row][col].isWall = nodes[row][col].isWall;
+        }
+    }
+    nodes = temp_nodes;
 }
 function zeroDelayDijkstra() {
     clearNodes();
