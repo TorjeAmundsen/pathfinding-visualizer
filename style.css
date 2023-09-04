@@ -73,6 +73,10 @@ body {
   padding-right: 2px;
   content: "Start";
 }
+.start-node:hover {
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(138, 100%, 73%);
+  transition: 0ms;
+}
 
 .end-node {
   background-color: hsl(281, 100%, 56%);
@@ -82,16 +86,32 @@ body {
   padding-right: 1px;
   content: "End";
 }
+.end-node:hover {
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(283, 100%, 73%);
+  transition: 0ms;
+}
 
 .path {
   transition: 100ms !important;
   background-color: yellow !important;
+}
+.path:hover {
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(36, 79%, 45%);
+  transition: 0ms;
 }
 
 .searching {
   animation: searchAnimation 1500ms;
   animation-iteration-count: 1;
   background-color: hsla(194, 88%, 61%, 0.87);
+}
+.searching:hover {
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(128, 69%, 54%);
+  transition: 0ms;
+}
+
+.wall {
+  background-color: hsl(210, 33%, 7%);
 }
 
 @keyframes searchAnimation {

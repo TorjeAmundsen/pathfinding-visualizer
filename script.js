@@ -1,16 +1,8 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const app = document.getElementById("app");
 const totalRows = 24;
 const totalCols = 50;
+let nodes = [];
 function getDOMAt(col, row) {
     return document.getElementById(`${col}-${row}`);
 }
@@ -22,9 +14,58 @@ let endNode = {
     col: 47,
     row: 21,
 };
-let nodes = [];
-let startEndSet = false;
+let drawingWall = false;
+let movingStart = false;
+let movingEnd = false;
+function handleMouseDown(col, row) {
+    if (!isSlotTaken(col, row)) {
+        drawingWall = true;
+        createWall(row, col);
+    }
+    else if (col === startNode.col && row === startNode.row) {
+        drawingWall = false;
+        movingEnd = false;
+        movingStart = true;
+    }
+    else if (col === endNode.col && row === endNode.row) {
+        drawingWall = false;
+        movingStart = false;
+        movingEnd = true;
+    }
+}
+function handleMouseEnter(col, row) {
+    if (drawingWall)
+        createWall(row, col);
+    else if (movingStart)
+        setStartNode(col, row);
+    else if (movingEnd)
+        setEndNode(col, row);
+}
+function handleMouseUp() {
+    drawingWall = false;
+    movingStart = false;
+    movingEnd = false;
+}
+function clearPath() {
+    app.innerHTML = "";
+    createGrid();
+    setStartNode(startNode.col, startNode.row, true);
+    setEndNode(endNode.col, endNode.row, true);
+}
+/* function handleClick(e: MouseEvent, col: number, row: number) {
+  if (e.shiftKey === true) {
+    setEndNode(col, row);
+  } else {
+    setStartNode(col, row);
+  }
+} */
+function createWall(row, col) {
+    nodes[row][col].distance = Infinity;
+    nodes[row][col].visited = true;
+    getDOMAt(col, row).classList.add("wall");
+}
 function createGrid() {
+    nodes = [];
     const wrapper = document.createElement("div");
     wrapper.classList.add("grid-container");
     for (let row = 0; row < totalRows; row++) {
@@ -39,8 +80,11 @@ function createGrid() {
             let node = document.createElement("div");
             node.id = `${col}-${row}`;
             node.classList.add("node");
-            node.addEventListener("click", (e) => {
-                handleClick(e, col, row);
+            node.addEventListener("mousedown", () => {
+                handleMouseDown(col, row);
+            });
+            node.addEventListener("mouseenter", () => {
+                handleMouseEnter(col, row);
             });
             wrapper.appendChild(node);
         }
@@ -48,42 +92,28 @@ function createGrid() {
     }
     app.appendChild(wrapper);
 }
-function clearPath() {
-    app.innerHTML = "";
-    createGrid();
-    setStartNode(startNode.col, startNode.row, true);
-    setEndNode(endNode.col, endNode.row, true);
-}
-function handleClick(e, col, row) {
-    console.log(e.shiftKey);
-    if (e.shiftKey === true) {
-        setEndNode(col, row);
-    }
-    else {
-        setStartNode(col, row);
-    }
-}
+document.body.addEventListener("mouseup", handleMouseUp);
 function isSlotTaken(col, row) {
     return ((col === startNode.col && row === startNode.row) || (col === endNode.col && row === endNode.row));
 }
 function setStartNode(col, row, firstRun = false) {
     if (isSlotTaken(col, row) && !firstRun)
         return;
-    document.getElementById(`${startNode.col}-${startNode.row}`).classList.remove("start-node");
+    getDOMAt(startNode.col, startNode.row).classList.remove("start-node");
     nodes[row][col].distance = 0;
     nodes[row][col].isEnd = false;
     nodes[row][col].isStart = true;
-    document.getElementById(`${col}-${row}`).classList.add("start-node");
+    getDOMAt(col, row).classList.add("start-node");
     startNode = { col: col, row: row };
 }
 function setEndNode(col, row, firstRun = false) {
     if (isSlotTaken(col, row) && !firstRun)
         return;
-    document.getElementById(`${endNode.col}-${endNode.row}`).classList.remove("end-node");
+    getDOMAt(endNode.col, endNode.row).classList.remove("end-node");
     nodes[row][col].isStart = false;
     nodes[row][col].isEnd = true;
     nodes[row][col].distance = Infinity;
-    document.getElementById(`${col}-${row}`).classList.add("end-node");
+    getDOMAt(col, row).classList.add("end-node");
     endNode = { col: col, row: row };
 }
 const delay = (delayInms) => {
@@ -93,9 +123,10 @@ const delay = (delayInms) => {
 //
 // It works though lol
 class PriorityQueue {
+    comparator;
+    heap = [];
     constructor(comparator) {
         this.comparator = comparator;
-        this.heap = [];
     }
     enqueue(element) {
         this.heap.push(element);
@@ -154,52 +185,50 @@ class PriorityQueue {
         }
     }
 }
-function dijkstra() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const directions = [
-            [0, 1],
-            [-1, 0],
-            [0, -1],
-            [1, 0],
-        ];
-        const queue = new PriorityQueue((a, b) => a.distance - b.distance);
-        queue.enqueue({ row: startNode.row, col: startNode.col, distance: 0 });
-        let iteration = 0;
-        while (!queue.isEmpty()) {
-            const { row: currentRow, col: currentCol, distance: currentDist } = queue.dequeue();
-            if (nodes[currentRow][currentCol].visited)
-                continue;
-            nodes[currentRow][currentCol].visited = true;
-            if (currentRow === endNode.row && currentCol === endNode.col) {
-                const path = backtrackPath();
-                yield visualizePath({ distance: currentDist, path });
-                return;
-            }
-            for (const [x, y] of directions) {
-                const newRow = currentRow + x;
-                const newCol = currentCol + y;
-                if (newRow >= 0 &&
-                    newRow < totalRows &&
-                    newCol >= 0 &&
-                    newCol < totalCols &&
-                    !nodes[newRow][newCol].visited) {
-                    getDOMAt(newCol, newRow).classList.add("searching");
-                    const newDist = currentDist + 1;
-                    if (newDist < nodes[newRow][newCol].distance) {
-                        nodes[newRow][newCol].distance = newDist;
-                        nodes[newRow][newCol].previous = { row: currentRow, col: currentCol };
-                        queue.enqueue({ row: newRow, col: newCol, distance: newDist });
-                    }
+async function dijkstra() {
+    const directions = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+    ];
+    const queue = new PriorityQueue((a, b) => a.distance - b.distance);
+    queue.enqueue({ row: startNode.row, col: startNode.col, distance: 0 });
+    let iteration = 0;
+    while (!queue.isEmpty()) {
+        const { row: currentRow, col: currentCol, distance: currentDist } = queue.dequeue();
+        if (nodes[currentRow][currentCol].visited)
+            continue;
+        nodes[currentRow][currentCol].visited = true;
+        if (currentRow === endNode.row && currentCol === endNode.col) {
+            const path = backtrackPath();
+            await visualizePath({ distance: currentDist, path });
+            return;
+        }
+        for (const [x, y] of directions) {
+            const newRow = currentRow + x;
+            const newCol = currentCol + y;
+            if (newRow >= 0 &&
+                newRow < totalRows &&
+                newCol >= 0 &&
+                newCol < totalCols &&
+                !nodes[newRow][newCol].visited) {
+                getDOMAt(newCol, newRow).classList.add("searching");
+                const newDist = currentDist + 1;
+                if (newDist < nodes[newRow][newCol].distance) {
+                    nodes[newRow][newCol].distance = newDist;
+                    nodes[newRow][newCol].previous = { row: currentRow, col: currentCol };
+                    queue.enqueue({ row: newRow, col: newCol, distance: newDist });
                 }
             }
-            iteration++;
-            if (iteration === 4) {
-                yield delay(25);
-                iteration = 0;
-            }
         }
-        return { distance: -1, path: [null] };
-    });
+        iteration++;
+        if (iteration === 4) {
+            await delay(25);
+            iteration = 0;
+        }
+    }
+    return { distance: -1, path: [null] };
 }
 function backtrackPath() {
     const path = [];
@@ -219,14 +248,14 @@ function backtrackPath() {
     path.unshift({ row: startNode.row, col: startNode.col });
     return path;
 }
-function visualizePath(path) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let i = 0; i < path.distance; i++) {
-            yield delay(30);
-            document.getElementById(`${path.path[i].col}-${path.path[i].row}`).classList.add("path");
-        }
-        document.getElementById(`${endNode.col}-${endNode.row}`).classList.add("path");
-    });
+async function visualizePath(path) {
+    for (let i = 0; i < path.distance; i++) {
+        await delay(30);
+        getDOMAt(path.path[i].col, path.path[i].row).classList.add("path");
+        getDOMAt(path.path[i].col, path.path[i].row).classList.remove("searching");
+    }
+    getDOMAt(endNode.col, endNode.row).classList.add("path");
+    getDOMAt(endNode.col, endNode.row).classList.remove("searching");
 }
 createGrid();
 setStartNode(startNode.col, startNode.row, true);

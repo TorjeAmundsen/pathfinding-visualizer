@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
-  <body>
+  <body oncontextmenu="return false;">
     <div class="buttons-container">
       <button onclick="dijkstra()" class="reset-button">Search (Dijkstra's Algorithm)</button>
-      <button onclick="location.reload()" class="reset-button">Reset Board</button>
+      <button onclick="clearPath()" class="reset-button">Reset Board</button>
     </div>
     <div id="app"></div>
     <script src="script.js"></script>
