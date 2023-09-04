@@ -38,6 +38,11 @@ function handleMouseDown(col, row) {
     }
 }
 function clearKeepWalls() {
+    boardFilled = false;
+    searching = false;
+    root.style.setProperty("--animation-time", "0ms");
+    root.style.setProperty("--node-transition", "50ms");
+    root.style.setProperty("--path-transition", "50ms");
     const temp_nodes = [...nodes];
     for (let row = 0; row < totalRows; row++) {
         for (let col = 0; col < totalCols; col++) {
@@ -47,6 +52,11 @@ function clearKeepWalls() {
         }
     }
     nodes = temp_nodes;
+    clearPath();
+    document.getElementById("run-button").disabled = false;
+    root.style.setProperty("--animation-time", "1500ms");
+    root.style.setProperty("--node-transition", "200ms");
+    root.style.setProperty("--path-transition", "100ms");
 }
 function zeroDelayDijkstra() {
     clearNodes();

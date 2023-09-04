@@ -16,7 +16,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  outline: 2px solid hsl(204, 53%, 52%);
+  /* outline: 1px solid hsl(0, 0%, 0%); */
 }
 
 .buttons-container {
@@ -24,29 +24,53 @@ body {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 32rem;
+  width: 100vw;
   height: 2.5rem;
   display: flex;
   justify-content: space-between;
+  gap: 2rem;
   align-items: center;
-  button {
-    transition: 100ms;
-    color: white;
-    background-color: hsla(207, 57%, 53%, 0.87);
-    border: none;
-    border-radius: 7px;
-    height: 2rem;
-    width: 15rem;
-    &:hover {
-      background-color: hsla(194, 58%, 54%, 0.87);
-      &:disabled {
-        background-color: hsl(192, 4%, 24%);
-      }
-    }
+}
+
+.reset-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  margin-right: 2.5vw;
+  width: 32rem;
+}
+
+#run-button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.25rem;
+}
+
+button {
+  z-index: 2;
+  transition: 100ms;
+  color: white;
+  background-color: hsla(207, 57%, 53%, 0.87);
+  border: none;
+  border-radius: 7px;
+  height: 2rem;
+  width: 15rem;
+  &:hover {
+    background-color: hsla(194, 58%, 54%, 0.87);
     &:disabled {
       background-color: hsl(192, 4%, 24%);
     }
   }
+  &:disabled {
+    background-color: hsl(192, 4%, 24%);
+  }
+}
+
+.instructions-button {
+  z-index: 1;
+  margin-left: 2.5vw;
 }
 
 .grid-container {
@@ -66,7 +90,7 @@ body {
   background-color: hsl(218, 15%, 25%);
   width: 1fr;
   height: 1fr;
-  outline: 2px solid hsla(204, 40%, 35%);
+  outline: 1px solid rgb(0, 0, 0);
   font-size: 0.7vw;
   transition: var(--node-transition);
   padding-top: 0.4vw;
