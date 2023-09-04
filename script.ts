@@ -139,6 +139,7 @@ function createGrid() {
   root.style.setProperty("--animation-time", "1500ms");
   root.style.setProperty("--node-transition", "200ms");
   root.style.setProperty("--path-transition", "100ms");
+  root.style.setProperty("--searched-bg", "hsla(194, 88%, 61%, 0.87)");
   nodes = [];
   const wrapper = document.createElement("div");
   wrapper.classList.add("grid-container");
@@ -219,6 +220,8 @@ async function dijkstra(
     nodes[currentRow][currentCol].visited = true;
     if (currentRow === endNode.row && currentCol === endNode.col) {
       const path = backtrackPath();
+      root.style.setProperty("--animation-time", "1500ms");
+      root.style.setProperty("--searched-bg", "hsla(194, 88%, 61%, 0.87)");
       await visualizePath({ distance: currentDist, path }, animationDelay);
       return;
     }
@@ -248,6 +251,9 @@ async function dijkstra(
       iteration = 0;
     }
   }
+  boardFilled = true;
+  root.style.setProperty("--animation-time", "0ms");
+  root.style.setProperty("--searched-bg", "hsla(0, 10%, 12%, 0.87)");
   (document.getElementById("reset-button") as HTMLButtonElement).disabled = false;
   searching = false;
 }

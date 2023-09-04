@@ -2,6 +2,7 @@
   --animation-time: 1500ms;
   --node-transition: 200ms;
   --path-transition: 100ms;
+  --searched-bg: rgb(139, 95, 74);
 }
 
 body {
@@ -115,7 +116,7 @@ body {
 .searching {
   animation: searchAnimation var(--animation-time);
   animation-iteration-count: 1;
-  background-color: hsla(194, 88%, 61%, 0.87);
+  background-color: var(--searched-bg);
 }
 .searching:hover {
   box-shadow: inset 0 0 0.65vw 0.25vw hsl(128, 69%, 54%);
