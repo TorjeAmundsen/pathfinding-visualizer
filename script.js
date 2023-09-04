@@ -116,72 +116,6 @@ function setEndNode(col, row, firstRun = false) {
 const delay = (delayInms) => {
     return new Promise((resolve) => setTimeout(resolve, delayInms));
 };
-// By far the hardest part of the project to wrap my head around
-//
-// It works though lol
-class PriorityQueue {
-    comparator;
-    heap = [];
-    constructor(comparator) {
-        this.comparator = comparator;
-    }
-    enqueue(element) {
-        this.heap.push(element);
-        this.up();
-    }
-    dequeue() {
-        if (this.isEmpty())
-            return null;
-        if (this.heap.length === 1)
-            return this.heap.pop();
-        const min = this.heap[0];
-        this.heap[0] = this.heap.pop();
-        this.down();
-        return min;
-    }
-    isEmpty() {
-        return this.heap.length === 0;
-    }
-    up() {
-        let i = this.heap.length - 1;
-        while (i > 0) {
-            const pIndex = Math.floor((i - 1) / 2);
-            if (this.comparator(this.heap[i], this.heap[pIndex]) >= 0)
-                break;
-            [this.heap[i], this.heap[pIndex]] = [this.heap[pIndex], this.heap[i]];
-            i = pIndex;
-        }
-    }
-    down() {
-        let i = 0;
-        const len = this.heap.length;
-        const element = this.heap[0];
-        while (true) {
-            const leftChildIndex = 2 * i + 1;
-            const rightChildIndex = 2 * i + 2;
-            let leftChild, rightChild;
-            let swap = null;
-            if (leftChildIndex < len) {
-                leftChild = this.heap[leftChildIndex];
-                if (this.comparator(leftChild, element) < 0) {
-                    swap = leftChildIndex;
-                }
-            }
-            if (rightChildIndex < len) {
-                rightChild = this.heap[rightChildIndex];
-                if ((swap === null && this.comparator(rightChild, element) < 0) ||
-                    (swap !== null && this.comparator(rightChild, leftChild) < 0)) {
-                    swap = rightChildIndex;
-                }
-            }
-            if (swap === null)
-                break;
-            this.heap[i] = this.heap[swap];
-            this.heap[swap] = element;
-            i = swap;
-        }
-    }
-}
 async function dijkstra(start, end) {
     searching = true;
     document.getElementById("reset-button").disabled = true;
@@ -190,16 +124,16 @@ async function dijkstra(start, end) {
     nodes[start.row][start.col].distance = 0;
     nodes[end.row][end.col].isEnd = true;
     const directions = [
-        [1, 0],
-        [-1, 0],
         [0, 1],
         [0, -1],
+        [1, 0],
+        [-1, 0],
     ];
-    const queue = new PriorityQueue((a, b) => a.distance - b.distance);
-    queue.enqueue({ row: startNode.row, col: startNode.col, distance: 0 });
+    const queue = [];
+    queue.push({ row: startNode.row, col: startNode.col, distance: 0 });
     let iteration = 0;
-    while (!queue.isEmpty()) {
-        const { row: currentRow, col: currentCol, distance: currentDist } = queue.dequeue();
+    while (queue.length > 0) {
+        const { row: currentRow, col: currentCol, distance: currentDist } = queue.shift();
         if (nodes[currentRow][currentCol].visited)
             continue;
         nodes[currentRow][currentCol].visited = true;
@@ -221,7 +155,7 @@ async function dijkstra(start, end) {
                 if (newDist < nodes[newRow][newCol].distance) {
                     nodes[newRow][newCol].distance = newDist;
                     nodes[newRow][newCol].previous = { row: currentRow, col: currentCol };
-                    queue.enqueue({ row: newRow, col: newCol, distance: newDist });
+                    queue.push({ row: newRow, col: newCol, distance: newDist });
                 }
             }
         }
