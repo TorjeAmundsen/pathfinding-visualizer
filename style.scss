@@ -1,3 +1,9 @@
+:root {
+  --animation-time: 1500ms;
+  --node-transition: 200ms;
+  --path-transition: 100ms;
+}
+
 body {
   user-select: none;
   margin: 0;
@@ -61,7 +67,7 @@ body {
   height: 1fr;
   outline: 2px solid hsla(204, 40%, 35%);
   font-size: 0.7vw;
-  transition: 200ms;
+  transition: var(--node-transition);
   padding-top: 0.4vw;
   &:hover {
     box-shadow: inset 0 0 0.65vw 0.25vw hsl(204, 100%, 71%);
@@ -100,12 +106,12 @@ body {
     box-shadow: inset 0 0 0.65vw 0.25vw hsl(36, 79%, 45%);
     transition: 0ms;
   }
-  transition: 100ms !important;
+  transition: var(--path-transition) !important;
   background-color: yellow !important;
 }
 
 .searching {
-  animation: searchAnimation 1500ms;
+  animation: searchAnimation var(--animation-time);
   animation-iteration-count: 1;
   background-color: hsla(194, 88%, 61%, 0.87);
   &:hover {
