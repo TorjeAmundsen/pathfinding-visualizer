@@ -19,7 +19,10 @@ let endNode = {
 let drawingWall = false;
 let movingStart = false;
 let movingEnd = false;
+let searching = false;
 function handleMouseDown(col, row) {
+    if (searching)
+        return;
     if (!isSlotTaken(col, row)) {
         movingEnd = false;
         movingStart = false;
@@ -38,6 +41,8 @@ function handleMouseDown(col, row) {
     }
 }
 function handleMouseEnter(e, col, row) {
+    if (searching)
+        return;
     if (drawingWall && !movingStart && !movingEnd)
         createWall(row, col);
     else if (movingStart)
@@ -51,6 +56,7 @@ function handleMouseUp() {
     movingEnd = false;
 }
 function clearPath() {
+    searching = false;
     app.innerHTML = "";
     createGrid();
     setStartNode(startNode.col, startNode.row, true);
@@ -177,6 +183,7 @@ class PriorityQueue {
     }
 }
 async function dijkstra(start, end) {
+    searching = true;
     document.getElementById("reset-button").disabled = true;
     document.getElementById("run-button").disabled = true;
     nodes[start.row][start.col].isStart = true;
@@ -225,6 +232,7 @@ async function dijkstra(start, end) {
         }
     }
     document.getElementById("reset-button").disabled = false;
+    searching = false;
     return { distance: -1, path: [null] };
 }
 function backtrackPath() {
