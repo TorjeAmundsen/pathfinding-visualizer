@@ -66,7 +66,6 @@ function handleMouseDown(col: number, row: number) {
   }
 }
 function handleMouseEnter(e: Event, col: number, row: number) {
-  console.log(e);
   if (drawingWall && !movingStart && !movingEnd) createWall(row, col);
   else if (movingStart) setStartNode(col, row);
   else if (movingEnd) setEndNode(col, row);
