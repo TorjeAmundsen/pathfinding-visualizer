@@ -2,7 +2,7 @@
   --animation-time: 1500ms;
   --node-transition: 200ms;
   --path-transition: 100ms;
-  --searched-bg: rgb(139, 95, 74);
+  --searched-bg: hsl(263, 52%, 30%);
 }
 
 body {
@@ -79,7 +79,7 @@ body {
 }
 
 .start-node {
-  background-color: hsl(130, 82%, 44%);
+  background-color: hsl(130, 82%, 44%) !important;
 }
 .start-node::before {
   line-height: 1fr;
@@ -87,12 +87,12 @@ body {
   content: "Start";
 }
 .start-node:hover {
-  box-shadow: inset 0 0 0.65vw 0.25vw hsl(138, 100%, 73%);
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(138, 100%, 73%) !important;
   transition: 0ms;
 }
 
 .end-node {
-  background-color: hsl(281, 100%, 56%);
+  background-color: hsl(281, 100%, 56%) !important;
 }
 .end-node::before {
   line-height: 1fr;
@@ -100,13 +100,13 @@ body {
   content: "End";
 }
 .end-node:hover {
-  box-shadow: inset 0 0 0.65vw 0.25vw hsl(283, 100%, 73%);
+  box-shadow: inset 0 0 0.65vw 0.25vw hsl(283, 100%, 73%) !important;
   transition: 0ms;
 }
 
 .path {
   transition: var(--path-transition) !important;
-  background-color: yellow !important;
+  background-color: yellow;
 }
 .path:hover {
   box-shadow: inset 0 0 0.65vw 0.25vw hsl(36, 79%, 45%);

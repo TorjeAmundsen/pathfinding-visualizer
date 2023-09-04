@@ -253,7 +253,7 @@ async function dijkstra(
   }
   boardFilled = true;
   root.style.setProperty("--animation-time", "0ms");
-  root.style.setProperty("--searched-bg", "hsla(0, 10%, 12%, 0.87)");
+  root.style.setProperty("--searched-bg", "hsl(263, 52%, 30%)");
   (document.getElementById("reset-button") as HTMLButtonElement).disabled = false;
   searching = false;
 }
