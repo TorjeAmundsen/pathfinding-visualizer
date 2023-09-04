@@ -19,6 +19,8 @@ let movingStart = false;
 let movingEnd = false;
 function handleMouseDown(col, row) {
     if (!isSlotTaken(col, row)) {
+        movingEnd = false;
+        movingStart = false;
         drawingWall = true;
         createWall(row, col);
     }
@@ -34,7 +36,8 @@ function handleMouseDown(col, row) {
     }
 }
 function handleMouseEnter(col, row) {
-    if (drawingWall)
+    console.log("drawingWall:", drawingWall, "movingStart:", movingStart, "movingEnd:", movingEnd);
+    if (drawingWall && !movingStart && !movingEnd)
         createWall(row, col);
     else if (movingStart)
         setStartNode(col, row);
@@ -93,9 +96,12 @@ function setStartNode(col, row, firstRun = false) {
     if (isSlotTaken(col, row) && !firstRun)
         return;
     getDOMAt(startNode.col, startNode.row).classList.remove("start-node");
+    /* nodes[startNode.row][startNode.col].distance = Infinity;
+    nodes[startNode.row][startNode.col].isEnd = false;
+    nodes[startNode.row][startNode.col].isStart = false;
     nodes[row][col].distance = 0;
     nodes[row][col].isEnd = false;
-    nodes[row][col].isStart = true;
+    nodes[row][col].isStart = true; */
     getDOMAt(col, row).classList.add("start-node");
     startNode = { col: col, row: row };
 }
@@ -103,9 +109,11 @@ function setEndNode(col, row, firstRun = false) {
     if (isSlotTaken(col, row) && !firstRun)
         return;
     getDOMAt(endNode.col, endNode.row).classList.remove("end-node");
+    /* nodes[endNode.row][endNode.col].isEnd = false;
+    nodes[endNode.row][endNode.col].isStart = false;
     nodes[row][col].isStart = false;
     nodes[row][col].isEnd = true;
-    nodes[row][col].distance = Infinity;
+    nodes[row][col].distance = Infinity; */
     getDOMAt(col, row).classList.add("end-node");
     endNode = { col: col, row: row };
 }
@@ -178,7 +186,10 @@ class PriorityQueue {
         }
     }
 }
-async function dijkstra() {
+async function dijkstra(start, end) {
+    nodes[start.row][start.col].isStart = true;
+    nodes[start.row][start.col].distance = 0;
+    nodes[end.row][end.col].isEnd = true;
     const directions = [
         [1, 0],
         [-1, 0],

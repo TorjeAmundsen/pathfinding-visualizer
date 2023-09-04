@@ -17,6 +17,11 @@ type Path = {
   path: { row: number; col: number }[];
 };
 
+type TStartEndNode = {
+  col: number;
+  row: number;
+};
+
 const app = document.getElementById("app");
 
 const totalRows = 24;
@@ -28,11 +33,11 @@ function getDOMAt(col: number, row: number): HTMLElement {
   return document.getElementById(`${col}-${row}`);
 }
 
-let startNode = {
+let startNode: TStartEndNode = {
   col: 2,
   row: 2,
 };
-let endNode = {
+let endNode: TStartEndNode = {
   col: 47,
   row: 21,
 };
@@ -43,6 +48,8 @@ let movingEnd = false;
 
 function handleMouseDown(col: number, row: number) {
   if (!isSlotTaken(col, row)) {
+    movingEnd = false;
+    movingStart = false;
     drawingWall = true;
     createWall(row, col);
   } else if (col === startNode.col && row === startNode.row) {
@@ -56,7 +63,8 @@ function handleMouseDown(col: number, row: number) {
   }
 }
 function handleMouseEnter(col: number, row: number) {
-  if (drawingWall) createWall(row, col);
+  console.log("drawingWall:", drawingWall, "movingStart:", movingStart, "movingEnd:", movingEnd);
+  if (drawingWall && !movingStart && !movingEnd) createWall(row, col);
   else if (movingStart) setStartNode(col, row);
   else if (movingEnd) setEndNode(col, row);
 }
@@ -119,9 +127,12 @@ function isSlotTaken(col: number, row: number): boolean {
 function setStartNode(col: number, row: number, firstRun: boolean = false) {
   if (isSlotTaken(col, row) && !firstRun) return;
   getDOMAt(startNode.col, startNode.row).classList.remove("start-node");
+  /* nodes[startNode.row][startNode.col].distance = Infinity;
+  nodes[startNode.row][startNode.col].isEnd = false;
+  nodes[startNode.row][startNode.col].isStart = false;
   nodes[row][col].distance = 0;
   nodes[row][col].isEnd = false;
-  nodes[row][col].isStart = true;
+  nodes[row][col].isStart = true; */
   getDOMAt(col, row).classList.add("start-node");
   startNode = { col: col, row: row };
 }
@@ -129,9 +140,11 @@ function setStartNode(col: number, row: number, firstRun: boolean = false) {
 function setEndNode(col: number, row: number, firstRun: boolean = false) {
   if (isSlotTaken(col, row) && !firstRun) return;
   getDOMAt(endNode.col, endNode.row).classList.remove("end-node");
+  /* nodes[endNode.row][endNode.col].isEnd = false;
+  nodes[endNode.row][endNode.col].isStart = false;
   nodes[row][col].isStart = false;
   nodes[row][col].isEnd = true;
-  nodes[row][col].distance = Infinity;
+  nodes[row][col].distance = Infinity; */
   getDOMAt(col, row).classList.add("end-node");
   endNode = { col: col, row: row };
 }
@@ -209,7 +222,10 @@ class PriorityQueue<T> {
   }
 }
 
-async function dijkstra(): Promise<Path> {
+async function dijkstra(start: TStartEndNode, end: TStartEndNode): Promise<Path> {
+  nodes[start.row][start.col].isStart = true;
+  nodes[start.row][start.col].distance = 0;
+  nodes[end.row][end.col].isEnd = true;
   const directions = [
     [1, 0],
     [-1, 0],

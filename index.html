@@ -8,7 +8,9 @@
   </head>
   <body oncontextmenu="return false;">
     <div class="buttons-container">
-      <button onclick="dijkstra()" class="reset-button">Search (Dijkstra's Algorithm)</button>
+      <button onclick="dijkstra(startNode, endNode)" class="reset-button">
+        Search (Dijkstra's Algorithm)
+      </button>
       <button onclick="clearPath()" class="reset-button">Reset Board</button>
     </div>
     <div id="app"></div>
