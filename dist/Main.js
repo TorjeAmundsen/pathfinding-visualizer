@@ -1,6 +1,15 @@
 "use strict";
+const AlgorithmArray = [Dijkstra, Astar];
+const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+];
 const root = document.querySelector(":root");
 const app = document.getElementById("app");
+const dijkstrasButton = document.getElementById("select-dijkstras");
+const astarButton = document.getElementById("select-astar");
 const totalRows = 24;
 const totalCols = 50;
 let drawingWall = false;
@@ -8,6 +17,7 @@ let movingStart = false;
 let movingEnd = false;
 let searching = false;
 let boardFilled = false;
+let chosenAlgorithmIndex = 0;
 let nodes = [];
 let startNode = {
     col: 2,
@@ -17,6 +27,26 @@ let endNode = {
     col: 47,
     row: 21,
 };
+function setCurrentAlgorithm(i) {
+    astarButton.classList.toggle("selected-algo", i === 1);
+    dijkstrasButton.classList.toggle("selected-algo", i === 0);
+    if (boardFilled && chosenAlgorithmIndex !== i) {
+        runCurrentAlgorithm(i);
+    }
+    chosenAlgorithmIndex = i;
+}
+function runCurrentAlgorithm(i) {
+    if (boardFilled) {
+        clearKeepWalls();
+        setTimeout(() => {
+            AlgorithmArray[i](nodes, startNode, endNode, 8);
+        }, 500);
+    }
+    else {
+        clearKeepWalls();
+        AlgorithmArray[i](nodes, startNode, endNode, 8);
+    }
+}
 function getDOMAt(col, row) {
     return document.getElementById(`${col}-${row}`);
 }
@@ -53,15 +83,15 @@ function clearKeepWalls() {
     }
     nodes = temp_nodes;
     clearPath();
-    document.getElementById("run-button").disabled = false;
-    root.style.setProperty("--animation-time", "1500ms");
-    root.style.setProperty("--node-transition", "200ms");
-    root.style.setProperty("--path-transition", "100ms");
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = false;
+    });
+    resetColorProperties();
 }
-function zeroDelayDijkstra() {
+function zeroDelayAlgo() {
     clearNodes();
     clearPath();
-    dijkstra(startNode, endNode, 0);
+    AlgorithmArray[chosenAlgorithmIndex](nodes, startNode, endNode, 0);
 }
 function handleMouseEnter(e, col, row) {
     if (boardFilled || (!boardFilled && !searching)) {
@@ -71,13 +101,13 @@ function handleMouseEnter(e, col, row) {
         else if (movingStart) {
             setStartNode(col, row);
             if (boardFilled) {
-                zeroDelayDijkstra();
+                zeroDelayAlgo();
             }
         }
         else if (movingEnd) {
             setEndNode(col, row);
             if (boardFilled) {
-                zeroDelayDijkstra();
+                zeroDelayAlgo();
             }
         }
     }
@@ -88,6 +118,7 @@ function handleMouseUp() {
     movingEnd = false;
 }
 function clearPath() {
+    resetColorProperties();
     document.querySelectorAll(".node").forEach((e) => {
         e.classList.remove("path");
         e.classList.remove("searching");
@@ -99,7 +130,7 @@ function createWall(row, col) {
     nodes[row][col].isWall = true;
     getDOMAt(col, row).classList.add("wall");
     if (boardFilled)
-        zeroDelayDijkstra();
+        zeroDelayAlgo();
 }
 function clearNodes() {
     for (let row = 0; row < totalRows; row++) {
@@ -116,13 +147,18 @@ function resetBoard() {
     createGrid();
     setStartNode(startNode.col, startNode.row, true);
     setEndNode(endNode.col, endNode.row, true);
-    document.getElementById("run-button").disabled = false;
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = false;
+    });
 }
-function createGrid() {
+function resetColorProperties() {
     root.style.setProperty("--animation-time", "1500ms");
     root.style.setProperty("--node-transition", "200ms");
     root.style.setProperty("--path-transition", "100ms");
     root.style.setProperty("--searched-bg", "hsla(194, 88%, 61%, 0.87)");
+}
+function createGrid() {
+    resetColorProperties();
     nodes = [];
     const wrapper = document.createElement("div");
     wrapper.classList.add("grid-container");
@@ -173,148 +209,13 @@ const delay = (delayInms) => {
 };
 function failedToFindPath() {
     boardFilled = true;
+    getDOMAt(startNode.col, startNode.row).classList.remove("searching");
     root.style.setProperty("--animation-time", "0ms");
     root.style.setProperty("--searched-bg", "hsl(263, 52%, 30%)");
-    document.getElementById("reset-button").disabled = false;
-    searching = false;
-}
-async function dijkstra(start, end, animationDelay) {
-    if (!boardFilled)
-        searching = true;
-    document.getElementById("reset-button").disabled = true;
-    document.getElementById("run-button").disabled = true;
-    nodes[start.row][start.col].isStart = true;
-    nodes[start.row][start.col].distance = 0;
-    nodes[end.row][end.col].isEnd = true;
-    const directions = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
-    const queue = [];
-    queue.push({ row: start.row, col: start.col, distance: 0 });
-    let iteration = 0;
-    while (queue.length > 0) {
-        const { row: currentRow, col: currentCol, distance: currentDist } = queue.shift();
-        if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall)
-            continue;
-        nodes[currentRow][currentCol].visited = true;
-        getDOMAt(currentCol, currentRow).classList.add("searching");
-        if (currentRow === endNode.row && currentCol === endNode.col) {
-            const path = backtrackPath();
-            root.style.setProperty("--animation-time", "1500ms");
-            root.style.setProperty("--searched-bg", "hsla(194, 88%, 61%, 0.87)");
-            await visualizePath({ distance: currentDist, path }, animationDelay);
-            return;
-        }
-        for (const [x, y] of directions) {
-            const newRow = currentRow + x;
-            const newCol = currentCol + y;
-            if (newRow >= 0 &&
-                newRow < totalRows &&
-                newCol >= 0 &&
-                newCol < totalCols &&
-                !nodes[newRow][newCol].visited &&
-                !nodes[newRow][newCol].isWall) {
-                const newDist = currentDist + 1;
-                if (newDist < nodes[newRow][newCol].distance) {
-                    nodes[newRow][newCol].distance = newDist;
-                    nodes[newRow][newCol].previous = { row: currentRow, col: currentCol };
-                    queue.push({ row: newRow, col: newCol, distance: newDist });
-                }
-            }
-        }
-        iteration++;
-        if (iteration === 4) {
-            if (animationDelay > 0)
-                await delay(animationDelay);
-            iteration = 0;
-        }
-    }
-    failedToFindPath();
-}
-async function Astar(start, end, animationDelay) {
-    nodes[start.row][start.col].isStart = true;
-    nodes[end.row][end.col].isEnd = true;
-    const directions = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
-    const queue = [];
-    const getRemaining = (row, col) => {
-        const xOffset = Math.abs(end.row - row);
-        const yOffset = Math.abs(end.col - col);
-        return xOffset + yOffset;
-    };
-    const remainingInital = getRemaining(start.row, start.col);
-    queue.push({
-        row: start.row,
-        col: start.col,
-        remaining: remainingInital,
-        travelled: 0,
-        total: remainingInital,
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = false;
     });
-    let iteration = 0;
-    while (queue.length > 0) {
-        let queueIndex = 0;
-        queue.forEach((node, i) => {
-            if (node.total < queue[queueIndex].total ||
-                (node.total === queue[queueIndex].total && node.remaining < queue[queueIndex].remaining)) {
-                queueIndex = i;
-            }
-        });
-        const [{ row: currentRow, col: currentCol, travelled: currentTravelled, total: currentTotal }] = queue.splice(queueIndex, 1);
-        nodes[currentRow][currentCol].queued = false;
-        getDOMAt(currentCol, currentRow).classList.add("searching");
-        if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall)
-            continue;
-        nodes[currentRow][currentCol].visited = true;
-        if (currentRow === endNode.row && currentCol === endNode.col) {
-            const path = backtrackPath();
-            root.style.setProperty("--animation-time", "1500ms");
-            root.style.setProperty("--searched-bg", "hsla(194, 88%, 61%, 0.87)");
-            await visualizePath({ distance: currentTotal, path }, animationDelay);
-            return;
-        }
-        for (const [x, y] of directions) {
-            const newRow = currentRow + x;
-            const newCol = currentCol + y;
-            if (newRow >= 0 &&
-                newRow < totalRows &&
-                newCol >= 0 &&
-                newCol < totalCols &&
-                !nodes[newRow][newCol].visited &&
-                !nodes[newRow][newCol].isWall) {
-                const newRemaining = getRemaining(newRow, newCol);
-                const newTravelled = currentTravelled + 1;
-                const newTotal = newRemaining + newTravelled;
-                if (!nodes[newRow][newCol].queued || nodes[newRow][newCol].distance > newTravelled) {
-                    nodes[newRow][newCol].distance = newTravelled;
-                    nodes[newRow][newCol].previous = { row: currentRow, col: currentCol };
-                    nodes[newRow][newCol].remaining = newRemaining;
-                    nodes[newRow][newCol].total = newTotal;
-                    nodes[newRow][newCol].queued = true;
-                    queue.push({
-                        row: newRow,
-                        col: newCol,
-                        remaining: newRemaining,
-                        travelled: newTravelled,
-                        total: newTotal,
-                    });
-                }
-            }
-        }
-        iteration++;
-        if (iteration === 4) {
-            if (animationDelay > 0)
-                await delay(animationDelay);
-            iteration = 0;
-        }
-    }
-    failedToFindPath();
+    searching = false;
 }
 function backtrackPath() {
     const path = [];
@@ -335,19 +236,24 @@ function backtrackPath() {
     return path;
 }
 async function visualizePath(path, animationDelay) {
+    getDOMAt(endNode.col, endNode.row).classList.remove("searching");
+    animationDelay *= 4;
     for (let i = 0; i < path.distance; i++) {
         if (animationDelay > 0)
             await delay(animationDelay);
         getDOMAt(path.path[i].col, path.path[i].row).classList.add("path");
         getDOMAt(path.path[i].col, path.path[i].row).classList.remove("searching");
     }
+    if (animationDelay > 0)
+        await delay(animationDelay);
     getDOMAt(endNode.col, endNode.row).classList.add("path");
-    getDOMAt(endNode.col, endNode.row).classList.remove("searching");
-    document.getElementById("reset-button").disabled = false;
     boardFilled = true;
     root.style.setProperty("--animation-time", "0ms");
     root.style.setProperty("--node-transition", "0ms");
     root.style.setProperty("--path-transition", "0ms");
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = false;
+    });
 }
 window.addEventListener("DOMContentLoaded", () => {
     createGrid();

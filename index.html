@@ -3,21 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./dist/css/style.css" />
     <title>Document</title>
   </head>
-  <button onclick="dijkstra(startNode, endNode, 25)" id="run-button">
-    Search (Dijkstra's Algorithm)
-  </button>
   <body oncontextmenu="return false;">
     <div class="buttons-container">
-      <button class="instructions-button">Instructions (WIP)</button>
-      <div class="reset-container">
+      <div class="select container">
+        <button onclick="setCurrentAlgorithm(0)" class="selected-algo" id="select-dijkstras">
+          Dijkstra's Algorithm
+        </button>
+        <button onclick="setCurrentAlgorithm(1)" id="select-astar">A* Algorithm</button>
+      </div>
+      <div class="container">
+        <button onclick="runCurrentAlgorithm(chosenAlgorithmIndex)" id="run-button">Search</button>
+      </div>
+      <div class="reset container">
         <button onclick="resetBoard()" id="reset-button">Reset Board</button>
         <button onclick="clearKeepWalls()" id="clear-button">Clear Board (keep walls)</button>
       </div>
     </div>
     <div id="app"></div>
-    <script src="script.js"></script>
+    <script src="./dist//pathfinding-algorithms/Dijkstra.js"></script>
+    <script src="./dist//pathfinding-algorithms/Astar.js"></script>
+    <script src="./dist/Main.js"></script>
   </body>
 </html>

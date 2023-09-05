@@ -17,37 +17,49 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -47%);
   /* outline: 1px solid hsl(0, 0%, 0%); */
 }
 
 .buttons-container {
+  box-shadow: 0 2px 5px hsla(0, 0%, 0%, 0.4);
+  background-color: hsl(219, 15%, 22%);
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-  height: 2.5rem;
+  height: 3.5rem;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
   align-items: center;
 }
 
-.reset-container {
+.container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin: 0;
   padding: 0;
-  margin-right: 2.5vw;
   width: 32rem;
 }
 
-#run-button {
+.select {
+  margin-left: 2vw;
+}
+
+.reset {
+  margin-right: 2vw;
+}
+
+/* #run-button {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0.25rem;
+} */
+:disabled {
+  transition: 100ms;
 }
 
 button {
@@ -57,7 +69,7 @@ button {
   background-color: hsla(207, 57%, 53%, 0.87);
   border: none;
   border-radius: 7px;
-  height: 2rem;
+  height: 2.5rem;
   width: 15rem;
 }
 button:hover {
@@ -68,6 +80,13 @@ button:hover:disabled {
 }
 button:disabled {
   background-color: hsl(192, 4%, 24%);
+}
+
+.selected-algo {
+  background-color: hsla(128, 69%, 37%, 0.87);
+}
+.selected-algo:hover {
+  background-color: hsla(128, 44%, 48%, 0.87);
 }
 
 .instructions-button {
