@@ -14,8 +14,8 @@ async function Dijkstra(
   end: TStartEndNode,
   animationDelay: number
 ): Promise<void> {
-  if (!boardFilled) searching = true;
   if (animationDelay > 0) clearKeepWalls();
+  if (!boardFilled) searching = true;
   document.querySelectorAll("button").forEach((e) => {
     e.disabled = true;
   });

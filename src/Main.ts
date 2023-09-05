@@ -82,22 +82,6 @@ function getDOMAt(col: number, row: number): HTMLElement {
   return document.getElementById(`${col}-${row}`);
 }
 
-function handleMouseDown(col: number, row: number) {
-  if (boardFilled || (!boardFilled && !searching)) {
-    drawingWall = false;
-    movingStart = false;
-    movingEnd = false;
-    if (!isSlotTaken(col, row)) {
-      drawingWall = true;
-      createWall(row, col);
-    } else if (col === startNode.col && row === startNode.row) {
-      movingStart = true;
-    } else if (col === endNode.col && row === endNode.row) {
-      movingEnd = true;
-    }
-  }
-}
-
 function clearKeepWalls() {
   boardFilled = false;
   searching = false;
@@ -124,6 +108,22 @@ function zeroDelayAlgo() {
   clearNodes();
   clearPath();
   AlgorithmArray[chosenAlgorithmIndex](nodes, startNode, endNode, 0);
+}
+
+function handleMouseDown(col: number, row: number) {
+  if (boardFilled || (!boardFilled && !searching)) {
+    drawingWall = false;
+    movingStart = false;
+    movingEnd = false;
+    if (!isSlotTaken(col, row)) {
+      drawingWall = true;
+      createWall(row, col);
+    } else if (col === startNode.col && row === startNode.row) {
+      movingStart = true;
+    } else if (col === endNode.col && row === endNode.row) {
+      movingEnd = true;
+    }
+  }
 }
 
 function handleMouseEnter(e: Event, col: number, row: number) {

@@ -15,7 +15,9 @@
         <button onclick="setCurrentAlgorithm(1)" id="select-astar">A* Algorithm</button>
       </div>
       <div class="container">
-        <button onclick="runCurrentAlgorithm(chosenAlgorithmIndex)" id="run-button">Search</button>
+        <button onclick="runCurrentAlgorithm(chosenAlgorithmIndex)" id="run-button">
+          Visualize Search
+        </button>
       </div>
       <div class="reset container">
         <button onclick="resetBoard()" id="reset-button">Reset Board</button>
@@ -23,8 +25,6 @@
       </div>
     </div>
     <div id="app"></div>
-    <script src="./dist//pathfinding-algorithms/Dijkstra.js"></script>
-    <script src="./dist//pathfinding-algorithms/Astar.js"></script>
-    <script src="./dist/Main.js"></script>
+    <script src="./dist/bundle.js"></script>
   </body>
 </html>
