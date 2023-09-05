@@ -1,11 +1,10 @@
 # pathfinding-visualizer
 https://torjeamundsen.github.io/pathfinding-visualizer/
 
+## Visualize either Dijkstra's Algorithm or A*!
+![chrome_hqaCqNmCtU](https://github.com/TorjeAmundsen/pathfinding-visualizer/assets/14235956/89a73b06-3572-44ef-abc0-47d23bbc5060)
 
+## Real time path recalculation when moving start/end nodes or drawing walls!
+![chrome_k2MbIM5sSg](https://github.com/TorjeAmundsen/pathfinding-visualizer/assets/14235956/21ed2fdc-945c-40fb-80fa-794a93b31c75)
 
-https://github.com/TorjeAmundsen/pathfinding-visualizer/assets/14235956/8ee4e128-e561-4f6c-880a-1b9164781917
-
-
-
-https://github.com/TorjeAmundsen/pathfinding-visualizer/assets/14235956/46efeb3e-2509-4a13-a936-653c7aba1c73
-
+## No libraries used, only TypeScript (for my own sanity)!
