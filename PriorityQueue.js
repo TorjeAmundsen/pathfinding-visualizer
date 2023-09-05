@@ -1,5 +1,5 @@
 "use strict";
-// By far the hardest part of the project to wrap my head around
+// The PriorityQueue was by far the hardest part of the project to wrap my head around
 //
 // It works though lol
 //

@@ -103,7 +103,7 @@ button:disabled {
 }
 
 .start-node {
-  background-color: hsl(130, 82%, 44%) !important;
+  background-color: hsl(130, 82%, 44%);
 }
 .start-node::before {
   line-height: 1fr;
@@ -116,7 +116,7 @@ button:disabled {
 }
 
 .end-node {
-  background-color: hsl(281, 100%, 56%) !important;
+  background-color: hsl(281, 100%, 56%);
 }
 .end-node::before {
   line-height: 1fr;
