@@ -57,7 +57,11 @@ body {
   margin-top: 0.25rem;
 } */
 :disabled {
+  color: hsl(0, 0%, 77%);
   transition: 100ms;
+  &.selected-algo {
+    background-color: hsla(128, 63%, 33%, 0.7);
+  }
 }
 
 button {
