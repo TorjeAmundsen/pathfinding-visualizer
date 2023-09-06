@@ -34,8 +34,8 @@ const app = document.getElementById("app");
 const dijkstrasButton = document.getElementById("select-dijkstras");
 const astarButton = document.getElementById("select-astar");
 
-const totalRows = 24;
-const totalCols = 50;
+const totalRows = 25;
+const totalCols = 53;
 
 let drawingWall = false;
 let movingStart = false;
@@ -53,9 +53,13 @@ let startNode: TStartEndNode = {
   row: 2,
 };
 let endNode: TStartEndNode = {
-  col: 47,
-  row: 21,
+  col: totalCols - 3,
+  row: totalRows - 3,
 };
+
+function getRandomNum(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 function setCurrentAlgorithm(i: number) {
   astarButton.classList.toggle("selected-algo", i === 1);

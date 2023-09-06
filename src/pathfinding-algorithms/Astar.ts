@@ -53,10 +53,10 @@ async function Astar(
       queue.splice(queueIndex, 1);
     nodes[currentRow][currentCol].queued = false;
     getDOMAt(currentCol, currentRow).classList.add("searching");
-    if (animationDelay > 0) await delay(animationDelay);
 
     if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall) continue;
     nodes[currentRow][currentCol].visited = true;
+    if (animationDelay > 0) await delay(animationDelay);
 
     if (currentRow === endNode.row && currentCol === endNode.col) {
       const path = backtrackPath();

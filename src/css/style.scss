@@ -94,9 +94,9 @@ button {
 
 .grid-container {
   display: grid;
-  width: 95vw;
-  grid-template-columns: repeat(50, calc(95vw / 50));
-  grid-template-rows: repeat(24, calc(95vw / 50));
+  width: 98vw;
+  grid-template-columns: repeat(53, calc(98vw / 53));
+  grid-template-rows: repeat(25, calc(98vw / 53));
   background-color: hsl(218, 15%, 25%);
 }
 
@@ -165,6 +165,7 @@ button {
 }
 .wall {
   background-color: hsl(210, 33%, 7%);
+  transition: 120ms;
 }
 
 @keyframes searchAnimation {

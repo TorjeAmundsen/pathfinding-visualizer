@@ -10,8 +10,8 @@ const root = document.querySelector(":root");
 const app = document.getElementById("app");
 const dijkstrasButton = document.getElementById("select-dijkstras");
 const astarButton = document.getElementById("select-astar");
-const totalRows = 24;
-const totalCols = 50;
+const totalRows = 25;
+const totalCols = 53;
 let drawingWall = false;
 let movingStart = false;
 let movingEnd = false;
@@ -24,9 +24,12 @@ let startNode = {
     row: 2,
 };
 let endNode = {
-    col: 47,
-    row: 21,
+    col: totalCols - 3,
+    row: totalRows - 3,
 };
+function getRandomNum(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 function setCurrentAlgorithm(i) {
     astarButton.classList.toggle("selected-algo", i === 1);
     dijkstrasButton.classList.toggle("selected-algo", i === 0);
@@ -124,7 +127,7 @@ function clearPath() {
         e.classList.remove("searching");
     });
 }
-function createWall(row, col) {
+function createWall(row, col, color) {
     if (isSlotTaken(col, row))
         return;
     nodes[row][col].isWall = true;
@@ -262,6 +265,67 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("mouseup", handleMouseUp);
     document.body.addEventListener("mouseleave", handleMouseUp);
 });
+function pickOrientation(width, height) {
+    if (width < height) {
+        return true;
+    }
+    else if (width > height) {
+        return false;
+    }
+    else {
+        return Math.floor(Math.random() * 2) === 0 ? true : false;
+    }
+}
+async function recursiveDivisionMaze(x, y, width, height, isHorizontal, animationDelay) {
+    if (width < 3 || height < 3) {
+        return;
+    }
+    let wallX, wallY, holeX, holeY, directionX, directionY, wallLength;
+    if (isHorizontal) {
+        directionX = 1;
+        directionY = 0;
+        wallX = x;
+        wallY = y + getRandomNum(1, Math.floor(height / 2)) * 2 - 1;
+        holeX = wallX + getRandomNum(0, Math.floor(width / 2)) * 2;
+        holeY = -1;
+        wallLength = width;
+    }
+    else {
+        wallX = x + getRandomNum(1, Math.floor(width / 2)) * 2 - 1;
+        wallY = y;
+        holeX = -1;
+        holeY = wallY + getRandomNum(0, Math.floor(height / 2)) * 2;
+        directionX = 0;
+        directionY = 1;
+        wallLength = height;
+    }
+    if (isHorizontal) {
+        for (let i = 0; i < wallLength; i++) {
+            if (wallX + i !== holeX) {
+                createWall(wallY, wallX + i);
+                if (animationDelay)
+                    await delay(animationDelay);
+            }
+        }
+    }
+    else {
+        for (let i = 0; i < wallLength; i++) {
+            if (wallY + i !== holeY) {
+                createWall(wallY + i, wallX);
+                if (animationDelay)
+                    await delay(animationDelay);
+            }
+        }
+    }
+    if (isHorizontal) {
+        await recursiveDivisionMaze(x, y, width, Math.abs(wallY - y), pickOrientation(width, Math.abs(wallY - y)), animationDelay);
+        await recursiveDivisionMaze(x, wallY + 1, width, height - (wallY - y) - 1, pickOrientation(width, height - (wallY - y) - 1), animationDelay);
+    }
+    else {
+        await recursiveDivisionMaze(x, y, Math.abs(wallX - x), height, pickOrientation(Math.abs(wallX - x), height), animationDelay);
+        await recursiveDivisionMaze(wallX + 1, y, width - (wallX - x) - 1, height, pickOrientation(width - (wallX - x) - 1, height), animationDelay);
+    }
+}
 /*
 
   Slight modification of Dijkstra's, makes it a lot better though
@@ -306,11 +370,11 @@ async function Astar(nodes, start, end, animationDelay) {
         const [{ row: currentRow, col: currentCol, travelled: currentTravelled, total: currentTotal }] = queue.splice(queueIndex, 1);
         nodes[currentRow][currentCol].queued = false;
         getDOMAt(currentCol, currentRow).classList.add("searching");
-        if (animationDelay > 0)
-            await delay(animationDelay);
         if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall)
             continue;
         nodes[currentRow][currentCol].visited = true;
+        if (animationDelay > 0)
+            await delay(animationDelay);
         if (currentRow === endNode.row && currentCol === endNode.col) {
             const path = backtrackPath();
             root.style.setProperty("--animation-time", "1500ms");
