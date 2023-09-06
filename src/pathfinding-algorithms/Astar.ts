@@ -30,6 +30,7 @@ async function Astar(
     return xOffset + yOffset;
   };
   const remainingInital = getRemaining(start.row, start.col);
+
   queue.push({
     row: start.row,
     col: start.col,

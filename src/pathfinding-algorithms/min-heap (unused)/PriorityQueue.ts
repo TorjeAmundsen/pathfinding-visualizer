@@ -22,9 +22,9 @@ class PriorityQueue<T> {
 
   dequeue(): T | null {
     if (this.isEmpty()) return null;
-    if (this.heap.length === 1) return this.heap.pop();
+    if (this.heap.length === 1) return this.heap.pop()!;
     const min = this.heap[0];
-    this.heap[0] = this.heap.pop();
+    this.heap[0] = this.heap.pop()!;
     this.down();
     return min;
   }
@@ -51,7 +51,7 @@ class PriorityQueue<T> {
       const leftChildIndex = 2 * i + 1;
       const rightChildIndex = 2 * i + 2;
       let leftChild, rightChild;
-      let swap = null;
+      let swap: number | null = null;
       if (leftChildIndex < len) {
         leftChild = this.heap[leftChildIndex];
         if (this.comparator(leftChild, element) < 0) {
