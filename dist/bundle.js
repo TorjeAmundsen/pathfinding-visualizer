@@ -204,6 +204,7 @@ function createGrid() {
 async function createMaze() {
     if (boardFilled) {
         clearWallsOnly();
+        await delay(300);
     }
     else {
         resetBoard();
