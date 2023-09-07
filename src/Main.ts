@@ -62,23 +62,24 @@ function getRandomNum(min: number, max: number): number {
 }
 
 function setCurrentAlgorithm(i: number) {
-  astarButton.classList.toggle("selected-algo", i === 1);
-  dijkstrasButton.classList.toggle("selected-algo", i === 0);
+  dijkstrasButton.classList.toggle("none", i === 1);
+  astarButton.classList.toggle("none", i === 0);
   if (boardFilled && chosenAlgorithmIndex !== i) {
     runCurrentAlgorithm(i);
   }
   chosenAlgorithmIndex = i;
+  console.log(["Dijkstra's", "A*"][i]);
 }
 
 function runCurrentAlgorithm(i: number) {
   if (boardFilled) {
     clearKeepWalls();
     setTimeout(() => {
-      AlgorithmArray[i](nodes, startNode, endNode, 8);
+      AlgorithmArray[i](nodes, startNode, endNode, 11);
     }, 500);
   } else {
     clearKeepWalls();
-    AlgorithmArray[i](nodes, startNode, endNode, 8);
+    AlgorithmArray[i](nodes, startNode, endNode, 11);
   }
 }
 
@@ -106,6 +107,17 @@ function clearKeepWalls() {
     e.disabled = false;
   });
   resetColorProperties();
+}
+
+function clearWallsOnly() {
+  document.querySelectorAll(".wall").forEach((e) => {
+    e.classList.remove("wall");
+  });
+  nodes.forEach((row) => {
+    row.forEach((node) => {
+      node.isWall = false;
+    });
+  });
 }
 
 function zeroDelayAlgo() {
@@ -225,6 +237,28 @@ function createGrid() {
     nodes.push(cols);
   }
   app.appendChild(wrapper);
+}
+
+async function createMaze() {
+  if (boardFilled) {
+    clearWallsOnly();
+  } else {
+    resetBoard();
+  }
+  document.querySelectorAll("button").forEach((e) => {
+    e.disabled = true;
+  });
+  await recursiveDivisionMaze(
+    0,
+    0,
+    totalCols,
+    totalRows,
+    pickOrientation(totalCols, totalRows),
+    20
+  );
+  document.querySelectorAll("button").forEach((e) => {
+    e.disabled = false;
+  });
 }
 
 function isSlotTaken(col: number, row: number): boolean {

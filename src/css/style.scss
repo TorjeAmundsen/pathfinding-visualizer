@@ -27,9 +27,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-  height: 3.5rem;
+  height: 3.4rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   gap: 2rem;
   align-items: center;
 }
@@ -39,15 +39,11 @@ body {
   justify-content: space-evenly;
   margin: 0;
   padding: 0;
-  width: 32rem;
+  width: max(26vw, 20rem);
 }
 
-.select {
-  margin-left: 2vw;
-}
-
-.reset {
-  margin-right: 2vw;
+.none {
+  display: none;
 }
 
 :disabled {
@@ -80,24 +76,15 @@ button {
   }
 }
 
-.selected-algo {
-  background-color: hsla(128, 69%, 37%, 0.87);
-  &:hover {
-    background-color: hsla(128, 44%, 48%, 0.87);
-  }
-}
-
-.instructions-button {
-  z-index: 1;
-  margin-left: 2.5vw;
-}
-
 .grid-container {
   display: grid;
   width: 98vw;
   grid-template-columns: repeat(53, calc(98vw / 53));
   grid-template-rows: repeat(25, calc(98vw / 53));
   background-color: hsl(218, 15%, 25%);
+  border: 4px solid hsl(210, 33%, 7%);
+  border-radius: 3px;
+  outline: 1px solid black;
 }
 
 .node {

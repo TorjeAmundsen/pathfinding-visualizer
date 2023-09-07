@@ -31,23 +31,24 @@ function getRandomNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 function setCurrentAlgorithm(i) {
-    astarButton.classList.toggle("selected-algo", i === 1);
-    dijkstrasButton.classList.toggle("selected-algo", i === 0);
+    dijkstrasButton.classList.toggle("none", i === 1);
+    astarButton.classList.toggle("none", i === 0);
     if (boardFilled && chosenAlgorithmIndex !== i) {
         runCurrentAlgorithm(i);
     }
     chosenAlgorithmIndex = i;
+    console.log(["Dijkstra's", "A*"][i]);
 }
 function runCurrentAlgorithm(i) {
     if (boardFilled) {
         clearKeepWalls();
         setTimeout(() => {
-            AlgorithmArray[i](nodes, startNode, endNode, 8);
+            AlgorithmArray[i](nodes, startNode, endNode, 11);
         }, 500);
     }
     else {
         clearKeepWalls();
-        AlgorithmArray[i](nodes, startNode, endNode, 8);
+        AlgorithmArray[i](nodes, startNode, endNode, 11);
     }
 }
 function getDOMAt(col, row) {
@@ -73,6 +74,16 @@ function clearKeepWalls() {
         e.disabled = false;
     });
     resetColorProperties();
+}
+function clearWallsOnly() {
+    document.querySelectorAll(".wall").forEach((e) => {
+        e.classList.remove("wall");
+    });
+    nodes.forEach((row) => {
+        row.forEach((node) => {
+            node.isWall = false;
+        });
+    });
 }
 function zeroDelayAlgo() {
     clearNodes();
@@ -127,7 +138,7 @@ function clearPath() {
         e.classList.remove("searching");
     });
 }
-function createWall(row, col, color) {
+function createWall(row, col) {
     if (isSlotTaken(col, row))
         return;
     nodes[row][col].isWall = true;
@@ -189,6 +200,21 @@ function createGrid() {
         nodes.push(cols);
     }
     app.appendChild(wrapper);
+}
+async function createMaze() {
+    if (boardFilled) {
+        clearWallsOnly();
+    }
+    else {
+        resetBoard();
+    }
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = true;
+    });
+    await recursiveDivisionMaze(0, 0, totalCols, totalRows, pickOrientation(totalCols, totalRows), 20);
+    document.querySelectorAll("button").forEach((e) => {
+        e.disabled = false;
+    });
 }
 function isSlotTaken(col, row) {
     return ((col === startNode.col && row === startNode.row) || (col === endNode.col && row === endNode.row));

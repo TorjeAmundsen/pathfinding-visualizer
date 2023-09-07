@@ -10,16 +10,19 @@
   <body oncontextmenu="return false;">
     <div class="buttons-container">
       <div class="select container">
-        <button onclick="setCurrentAlgorithm(0)" class="selected-algo" id="select-dijkstras">
-          Dijkstra's Algorithm
+        <button onclick="setCurrentAlgorithm(1)" id="select-dijkstras">
+          Toggle Algorithm <br />
+          (Dijkstra's selected)
         </button>
-        <button onclick="setCurrentAlgorithm(1)" id="select-astar">A* Algorithm</button>
-      </div>
-      <div class="container">
-        <button onclick="runCurrentAlgorithm(chosenAlgorithmIndex)" id="run-button">
-          Visualize Search
+        <button onclick="setCurrentAlgorithm(0)" id="select-astar" class="none">
+          Toggle Algorithm <br />
+          (A* Selected)
         </button>
+        <button onclick="createMaze()" id="maze-button">Generate Maze</button>
       </div>
+      <button onclick="runCurrentAlgorithm(chosenAlgorithmIndex)" id="run-button">
+        Visualize Search
+      </button>
       <div class="reset container">
         <button onclick="resetBoard()" id="reset-button">Reset Board</button>
         <button onclick="clearKeepWalls()" id="clear-button">Clear Board (keep walls)</button>
