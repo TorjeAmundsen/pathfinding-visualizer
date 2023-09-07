@@ -17,6 +17,7 @@ let movingStart = false;
 let movingEnd = false;
 let searching = false;
 let boardFilled = false;
+let generatingMaze = false;
 let chosenAlgorithmIndex = 0;
 let nodes = [];
 let startNode = {
@@ -37,7 +38,6 @@ function setCurrentAlgorithm(i) {
         runCurrentAlgorithm(i);
     }
     chosenAlgorithmIndex = i;
-    console.log(["Dijkstra's", "A*"][i]);
 }
 function runCurrentAlgorithm(i) {
     if (boardFilled) {
@@ -202,9 +202,9 @@ function createGrid() {
     app.appendChild(wrapper);
 }
 async function createMaze() {
+    generatingMaze = true;
     if (boardFilled) {
         clearWallsOnly();
-        await delay(300);
     }
     else {
         resetBoard();
@@ -213,6 +213,7 @@ async function createMaze() {
         e.disabled = true;
     });
     await recursiveDivisionMaze(0, 0, totalCols, totalRows, pickOrientation(totalCols, totalRows), 20);
+    generatingMaze = false;
     document.querySelectorAll("button").forEach((e) => {
         e.disabled = false;
     });
@@ -242,9 +243,11 @@ function failedToFindPath() {
     getDOMAt(startNode.col, startNode.row).classList.remove("searching");
     root.style.setProperty("--animation-time", "0ms");
     root.style.setProperty("--searched-bg", "hsl(263, 52%, 30%)");
-    document.querySelectorAll("button").forEach((e) => {
-        e.disabled = false;
-    });
+    if (!generatingMaze) {
+        document.querySelectorAll("button").forEach((e) => {
+            e.disabled = false;
+        });
+    }
     searching = false;
 }
 function backtrackPath() {
@@ -281,9 +284,11 @@ async function visualizePath(path, animationDelay) {
     root.style.setProperty("--animation-time", "0ms");
     root.style.setProperty("--node-transition", "0ms");
     root.style.setProperty("--path-transition", "0ms");
-    document.querySelectorAll("button").forEach((e) => {
-        e.disabled = false;
-    });
+    if (!generatingMaze) {
+        document.querySelectorAll("button").forEach((e) => {
+            e.disabled = false;
+        });
+    }
 }
 window.addEventListener("DOMContentLoaded", () => {
     createGrid();

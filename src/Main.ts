@@ -43,6 +43,7 @@ let movingEnd = false;
 
 let searching = false;
 let boardFilled = false;
+let generatingMaze = false;
 
 let chosenAlgorithmIndex = 0;
 
@@ -68,7 +69,6 @@ function setCurrentAlgorithm(i: number) {
     runCurrentAlgorithm(i);
   }
   chosenAlgorithmIndex = i;
-  console.log(["Dijkstra's", "A*"][i]);
 }
 
 function runCurrentAlgorithm(i: number) {
@@ -240,9 +240,9 @@ function createGrid() {
 }
 
 async function createMaze() {
+  generatingMaze = true;
   if (boardFilled) {
     clearWallsOnly();
-    await delay(300);
   } else {
     resetBoard();
   }
@@ -257,6 +257,7 @@ async function createMaze() {
     pickOrientation(totalCols, totalRows),
     20
   );
+  generatingMaze = false;
   document.querySelectorAll("button").forEach((e) => {
     e.disabled = false;
   });
@@ -291,9 +292,11 @@ function failedToFindPath() {
   getDOMAt(startNode.col, startNode.row).classList.remove("searching");
   root.style.setProperty("--animation-time", "0ms");
   root.style.setProperty("--searched-bg", "hsl(263, 52%, 30%)");
-  document.querySelectorAll("button").forEach((e) => {
-    e.disabled = false;
-  });
+  if (!generatingMaze) {
+    document.querySelectorAll("button").forEach((e) => {
+      e.disabled = false;
+    });
+  }
   searching = false;
 }
 
@@ -329,9 +332,11 @@ async function visualizePath(path: Path, animationDelay: number) {
   root.style.setProperty("--animation-time", "0ms");
   root.style.setProperty("--node-transition", "0ms");
   root.style.setProperty("--path-transition", "0ms");
-  document.querySelectorAll("button").forEach((e) => {
-    e.disabled = false;
-  });
+  if (!generatingMaze) {
+    document.querySelectorAll("button").forEach((e) => {
+      e.disabled = false;
+    });
+  }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
