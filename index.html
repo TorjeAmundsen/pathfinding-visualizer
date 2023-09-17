@@ -28,6 +28,19 @@
         <button onclick="clearKeepWalls()" id="clear-button">Clear Board (keep walls)</button>
       </div>
     </div>
+    <div id="settings-container" class="settings-container">
+      <div class="grid-size-slider-container">
+        <input
+          type="range"
+          min="0"
+          max="3"
+          value="1"
+          class="slider"
+          id="size-slider"
+          onchange="selectedSize = this.value; resetBoard()"
+        />
+      </div>
+    </div>
     <div id="app"></div>
     <script src="./dist/bundle.js"></script>
   </body>

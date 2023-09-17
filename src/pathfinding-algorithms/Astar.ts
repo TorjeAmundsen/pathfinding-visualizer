@@ -70,9 +70,9 @@ async function Astar(
       const newCol = currentCol + y;
       if (
         newRow >= 0 &&
-        newRow < totalRows &&
+        newRow < gridSizes[selectedSize].rows &&
         newCol >= 0 &&
-        newCol < totalCols &&
+        newCol < gridSizes[selectedSize].cols &&
         !nodes[newRow][newCol].visited &&
         !nodes[newRow][newCol].isWall
       ) {

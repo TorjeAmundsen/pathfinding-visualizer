@@ -34,8 +34,8 @@ const app = document.getElementById("app");
 const dijkstrasButton = document.getElementById("select-dijkstras");
 const astarButton = document.getElementById("select-astar");
 
-const totalRows = 25;
-const totalCols = 53;
+const totalRows = 17;
+const totalCols = 37;
 
 let drawingWall = false;
 let movingStart = false;
@@ -49,17 +49,48 @@ let chosenAlgorithmIndex = 0;
 
 let nodes: TNode[][] = [];
 
+const gridSizes = [
+  {
+    rows: 17,
+    cols: 37,
+  },
+  {
+    rows: 25,
+    cols: 53,
+  },
+  {
+    rows: 31,
+    cols: 69,
+  },
+  {
+    rows: 41,
+    cols: 89,
+  },
+];
+
+let selectedSize = 1;
+
 let startNode: TStartEndNode = {
   col: 2,
   row: 2,
 };
 let endNode: TStartEndNode = {
-  col: totalCols - 3,
-  row: totalRows - 3,
+  col: gridSizes[selectedSize].cols - 3,
+  row: gridSizes[selectedSize].rows - 3,
 };
 
 function getRandomNum(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function updateGridStyles(resetStartEnd = false) {
+  const grid = document.getElementById("grid-container");
+  grid.style.gridTemplateColumns = `repeat(${gridSizes[selectedSize].cols}, calc(98vw / ${gridSizes[selectedSize].cols}))`;
+  grid.style.gridTemplateRows = `repeat(${gridSizes[selectedSize].rows}, calc(98vw / ${gridSizes[selectedSize].cols}))`;
+  if (resetStartEnd) {
+    setStartNode(2, 2, true);
+    setEndNode(gridSizes[selectedSize].cols - 3, gridSizes[selectedSize].rows - 3, true);
+  }
 }
 
 function setCurrentAlgorithm(i: number) {
@@ -94,8 +125,8 @@ function clearKeepWalls() {
   root.style.setProperty("--node-transition", "50ms");
   root.style.setProperty("--path-transition", "50ms");
   const temp_nodes = [...nodes];
-  for (let row = 0; row < totalRows; row++) {
-    for (let col = 0; col < totalCols; col++) {
+  for (let row = 0; row < gridSizes[selectedSize].rows; row++) {
+    for (let col = 0; col < gridSizes[selectedSize].cols; col++) {
       temp_nodes[row][col].distance = Infinity;
       temp_nodes[row][col].visited = false;
       temp_nodes[row][col].isWall = nodes[row][col].isWall;
@@ -165,6 +196,7 @@ function handleMouseUp() {
   movingStart = false;
   movingEnd = false;
 }
+
 function clearPath() {
   resetColorProperties();
   document.querySelectorAll(".node").forEach((e) => {
@@ -181,8 +213,8 @@ function createWall(row: number, col: number) {
 }
 
 function clearNodes() {
-  for (let row = 0; row < totalRows; row++) {
-    for (let col = 0; col < totalCols; col++) {
+  for (let row = 0; row < gridSizes[selectedSize].rows; row++) {
+    for (let col = 0; col < gridSizes[selectedSize].cols; col++) {
       nodes[row][col].distance = Infinity;
       nodes[row][col].visited = false;
     }
@@ -194,11 +226,11 @@ function resetBoard() {
   boardFilled = false;
   app.innerHTML = "";
   createGrid();
-  setStartNode(startNode.col, startNode.row, true);
-  setEndNode(endNode.col, endNode.row, true);
   document.querySelectorAll("button").forEach((e) => {
     e.disabled = false;
   });
+  resetStartAndEnd();
+  updateGridStyles(true);
 }
 
 function resetColorProperties() {
@@ -212,10 +244,10 @@ function createGrid() {
   resetColorProperties();
   nodes = [];
   const wrapper = document.createElement("div");
-  wrapper.classList.add("grid-container");
-  for (let row = 0; row < totalRows; row++) {
+  wrapper.id = "grid-container";
+  for (let row = 0; row < gridSizes[selectedSize].rows; row++) {
     const cols: TNode[] = [];
-    for (let col = 0; col < totalCols; col++) {
+    for (let col = 0; col < gridSizes[selectedSize].cols; col++) {
       cols.push({
         visited: false,
         distance: Infinity,
@@ -237,6 +269,7 @@ function createGrid() {
     nodes.push(cols);
   }
   app.appendChild(wrapper);
+  resetStartAndEnd();
 }
 
 async function createMaze() {
@@ -252,10 +285,10 @@ async function createMaze() {
   await recursiveDivisionMaze(
     0,
     0,
-    totalCols,
-    totalRows,
-    pickOrientation(totalCols, totalRows),
-    20
+    gridSizes[selectedSize].cols,
+    gridSizes[selectedSize].rows,
+    pickOrientation(gridSizes[selectedSize].cols, gridSizes[selectedSize].rows),
+    16
   );
   generatingMaze = false;
   document.querySelectorAll("button").forEach((e) => {
@@ -274,6 +307,21 @@ function setStartNode(col: number, row: number, firstRun: boolean = false) {
   getDOMAt(startNode.col, startNode.row).classList.remove("start-node");
   getDOMAt(col, row).classList.add("start-node");
   startNode = { col: col, row: row };
+}
+
+function resetStartAndEnd() {
+  document.querySelectorAll(".start-node").forEach((e) => {
+    e.classList.remove("start-node");
+  });
+  document.querySelectorAll(".end-node").forEach((e) => {
+    e.classList.remove("end-node");
+  });
+  getDOMAt(2, 2).classList.add("start-node");
+  getDOMAt(gridSizes[selectedSize].cols - 3, gridSizes[selectedSize].rows - 3).classList.add(
+    "end-node"
+  );
+  startNode = { col: 2, row: 2 };
+  endNode = { col: gridSizes[selectedSize].cols - 3, row: gridSizes[selectedSize].rows - 3 };
 }
 
 function setEndNode(col: number, row: number, firstRun: boolean = false) {
@@ -341,8 +389,9 @@ async function visualizePath(path: Path, animationDelay: number) {
 
 window.addEventListener("DOMContentLoaded", () => {
   createGrid();
-  setStartNode(startNode.col, startNode.row, true);
-  setEndNode(endNode.col, endNode.row, true);
+  updateGridStyles();
+  setStartNode(2, 2, true);
+  setEndNode(gridSizes[selectedSize].cols - 3, gridSizes[selectedSize].rows - 3, true);
   document.body.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("mouseleave", handleMouseUp);
 });
