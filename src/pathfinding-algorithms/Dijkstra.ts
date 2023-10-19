@@ -16,6 +16,7 @@ async function Dijkstra(
 ): Promise<void> {
   if (animationDelay > 0) clearKeepWalls();
   if (!boardFilled) searching = true;
+  if (!boardFilled && !searching) return;
   document.querySelectorAll("button").forEach((e) => {
     e.disabled = true;
   });
@@ -26,6 +27,7 @@ async function Dijkstra(
 
   queue.push({ row: start.row, col: start.col, distance: 0 });
   while (queue.length > 0) {
+    if (!boardFilled && !searching) return;
     const { row: currentRow, col: currentCol, distance: currentDist } = queue.shift();
     if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall) continue;
     nodes[currentRow][currentCol].visited = true;

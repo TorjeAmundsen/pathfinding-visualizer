@@ -52,18 +52,18 @@ let nodes: TNode[][] = [];
 const gridSizes = [
   {
     rows: 17,
-    cols: 37,
+    cols: 39,
   },
   {
-    rows: 25,
+    rows: 23,
     cols: 53,
   },
   {
-    rows: 31,
-    cols: 69,
+    rows: 29,
+    cols: 67,
   },
   {
-    rows: 41,
+    rows: 39,
     cols: 89,
   },
 ];

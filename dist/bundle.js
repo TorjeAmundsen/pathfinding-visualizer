@@ -23,18 +23,18 @@ let nodes = [];
 const gridSizes = [
     {
         rows: 17,
-        cols: 37,
+        cols: 39,
     },
     {
-        rows: 25,
+        rows: 23,
         cols: 53,
     },
     {
-        rows: 31,
-        cols: 69,
+        rows: 29,
+        cols: 67,
     },
     {
-        rows: 41,
+        rows: 39,
         cols: 89,
     },
 ];
@@ -339,6 +339,24 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("mouseup", handleMouseUp);
     document.body.addEventListener("mouseleave", handleMouseUp);
 });
+const colorThemes = [
+    {
+        name: "Default (Dark)",
+        searched: "hsla(263, 52%, 30%, 1)",
+        searchStep1: "hsla(138, 100%, 50%, 0)",
+        searchStep2: "hsla(147, 100%, 50%, 1)",
+        searchStep3: "hsla(167, 100%, 50%, 1)",
+        searchStep4: "hsla(194, 88%, 61%, 0.87)",
+    },
+    {
+        name: "Default (Light)",
+        searched: "hsla(263, 52%, 30%, 1)",
+        searchStep1: "hsla(138, 100%, 50%, 0)",
+        searchStep2: "hsla(147, 100%, 50%, 1)",
+        searchStep3: "hsla(167, 100%, 50%, 1)",
+        searchStep4: "hsla(194, 88%, 61%, 0.87)",
+    },
+];
 function pickOrientation(width, height) {
     if (width < height) {
         return true;
@@ -501,6 +519,8 @@ async function Dijkstra(nodes, start, end, animationDelay) {
         clearKeepWalls();
     if (!boardFilled)
         searching = true;
+    if (!boardFilled && !searching)
+        return;
     document.querySelectorAll("button").forEach((e) => {
         e.disabled = true;
     });
@@ -510,6 +530,8 @@ async function Dijkstra(nodes, start, end, animationDelay) {
     const queue = [];
     queue.push({ row: start.row, col: start.col, distance: 0 });
     while (queue.length > 0) {
+        if (!boardFilled && !searching)
+            return;
         const { row: currentRow, col: currentCol, distance: currentDist } = queue.shift();
         if (nodes[currentRow][currentCol].visited || nodes[currentRow][currentCol].isWall)
             continue;

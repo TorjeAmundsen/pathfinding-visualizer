@@ -2,7 +2,12 @@
   --animation-time: 1500ms;
   --node-transition: 200ms;
   --path-transition: 100ms;
-  --searched-bg: hsl(263, 52%, 30%);
+  --main-bg: hsla(218, 15%, 15%, 1);
+  --searched-bg: hsla(263, 52%, 30%, 1);
+  --search-step-1: hsla(138, 100%, 50%, 0);
+  --search-step-2: hsla(147, 100%, 50%, 1);
+  --search-step-3: hsla(167, 100%, 50%, 1);
+  --search-step-4: hsla(194, 88%, 61%, 0.87);
 }
 
 body {
@@ -10,7 +15,7 @@ body {
      -moz-user-select: none;
           user-select: none;
   margin: 0;
-  background-color: hsl(218, 15%, 15%);
+  background-color: var(--main-bg);
 }
 
 #app {
@@ -172,15 +177,15 @@ button:disabled {
 
 @keyframes searchAnimation {
   0% {
-    background-color: hsla(138, 100%, 50%, 0);
+    background-color: var(--search-step-1);
   }
   25% {
-    background-color: hsl(147, 100%, 50%);
+    background-color: var(--search-step-2);
   }
   50% {
-    background-color: hsl(167, 100%, 50%);
+    background-color: var(--search-step-3);
   }
   100% {
-    background-color: hsla(194, 88%, 61%, 0.87);
+    background-color: var(--search-step-4);
   }
 }/*# sourceMappingURL=style.css.map */
